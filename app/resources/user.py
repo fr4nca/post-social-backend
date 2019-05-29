@@ -1,22 +1,23 @@
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import jwt_required, create_access_token,get_jwt_identity
-from app.models.User import UserModel
-from flask import jsonify, make_response
-from app.models import db
-
 from datetime import datetime as dt
 
-class UserResource(Resource):
-  parser = reqparse.RequestParser()
-  parser.add_argument('email', type=str, help="Campo não pode ser vazio")
-  parser.add_argument('password', type=str, help="Campo não pode ser vazio")
+from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required, create_access_token,get_jwt_identity, create_refresh_token
+from flask import jsonify, make_response
 
+from app.models.User import UserModel
+from app.models import db
+
+user_parser = reqparse.RequestParser()
+user_parser.add_argument('email', type=str, help="Campo não pode ser vazio")
+user_parser.add_argument('password', type=str, help="Campo não pode ser vazio")
+
+class UserResource(Resource):
   @jwt_required
   def get(self):
     return get_jwt_identity()
 
   def post(self):
-    args = self.parser.parse_args()
+    args = user_parser.parse_args()
     user = UserModel.find_by_email(args['email'])
     if not user:
       new_user = UserModel(email=args['email'], password=args['password'], created_at=dt.now())
@@ -29,14 +30,14 @@ class UserResource(Resource):
       return { "message": "Já existe um usuário com este email" }, 400
 
 class UserAuthResource(Resource):
-  parser = reqparse.RequestParser()
-  parser.add_argument('email', type=str, help="Campo não pode ser vazio")
-  parser.add_argument('password', type=str, help="Campo não pode ser vazio")
-
-  def post(self):
-    args = self.parser.parse_args()
+  @classmethod
+  def post(cls):
+    args = user_parser.parse_args()
     user = UserModel.find_by_email(args['email'])
 
     if user and user.check_password(args['password']):
-      access_token = create_access_token(identity={'email': args['email'], 'id': user.id})
-      return make_response(jsonify({'token': access_token}), 200)
+      access_token = create_access_token(identity={ 'email': args['email'], 'id': user.id }, fresh=True)
+      refresh_token = create_refresh_token(identity={ 'email': args['email'], 'id': user.id })
+      return { 'token': access_token, 'refresh-token': refresh_token }, 200
+    else:
+      return { 'message': 'Credenciais invalidas'}, 401
