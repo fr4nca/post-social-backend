@@ -4,12 +4,12 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, create_access_token,get_jwt_identity, create_refresh_token
 from flask import jsonify, make_response
 
+from app import db
 from app.models.User import UserModel
-from app.models import db
 
 user_parser = reqparse.RequestParser()
-user_parser.add_argument('email', type=str, help="Campo não pode ser vazio")
-user_parser.add_argument('password', type=str, help="Campo não pode ser vazio")
+user_parser.add_argument('email', type=str, help='Campo não pode ser vazio')
+user_parser.add_argument('password', type=str, help='Campo não pode ser vazio')
 
 class UserResource(Resource):
   @jwt_required
@@ -25,9 +25,9 @@ class UserResource(Resource):
       db.session.add(new_user)
       db.session.commit()
 
-      return { "message": "Usuário criado com sucesso" }, 200
+      return { 'message': 'Usuário criado com sucesso' }, 200
     else:
-      return { "message": "Já existe um usuário com este email" }, 400
+      return { 'message': 'Já existe um usuário com este email' }, 400
 
 class UserAuthResource(Resource):
   @classmethod
@@ -36,8 +36,7 @@ class UserAuthResource(Resource):
     user = UserModel.find_by_email(args['email'])
 
     if user and user.check_password(args['password']):
-      access_token = create_access_token(identity={ 'email': args['email'], 'id': user.id }, fresh=True)
-      refresh_token = create_refresh_token(identity={ 'email': args['email'], 'id': user.id })
-      return { 'token': access_token, 'refresh-token': refresh_token }, 200
+      access_token = create_access_token(identity={ 'email': args['email'], 'id': user.id })
+      return { 'token': access_token }, 200
     else:
       return { 'message': 'Credenciais invalidas'}, 401

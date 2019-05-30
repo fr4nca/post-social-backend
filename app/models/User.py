@@ -1,4 +1,4 @@
-from . import db
+from app.server import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class UserModel(db.Model):
@@ -7,6 +7,7 @@ class UserModel(db.Model):
     email = db.Column(db.String(80), index=True, unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.String(80), nullable=False)
+    posts = db.relationship('PostModel', backref='user', lazy=True)
 
     def __init__(self, email, password, created_at):
         self.email = email
@@ -27,9 +28,3 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
-
-    def __str__(self):
-        return 'User(email='+self.email+', id='+str(self.id)+ ')'
-
-    def __repr__(self):
-        return {'email':self.email, 'id':self.id}
