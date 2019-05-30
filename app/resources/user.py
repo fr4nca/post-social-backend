@@ -1,8 +1,8 @@
 from datetime import datetime as dt
 
-from flask_restful import Resource, reqparse
-from flask_jwt_extended import jwt_required, create_access_token,get_jwt_identity, create_refresh_token
 from flask import jsonify, make_response
+from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required, create_access_token,get_jwt_identity
 
 from app import db
 from app.models.User import UserModel

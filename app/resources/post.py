@@ -1,12 +1,12 @@
 from datetime import datetime as dt
 
-from flask import make_response, jsonify
+from flask import jsonify, make_response
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required
 
-from app.models.Post import PostModel, posts_schema, post_schema
-from app.models.User import UserModel
 from app import db
+from app.models.User import UserModel
+from app.models.Post import PostModel, posts_schema, post_schema
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('corpo', type=str, help='Campo não pode ser vazio')
@@ -32,6 +32,7 @@ class PostsResource(Resource):
 class PostResource(Resource):
   def get(self, _id):
     res = PostModel.find_by_id(_id)
+
     if res:
       post = post_schema.dump(res)
       return post

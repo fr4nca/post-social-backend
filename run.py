@@ -1,4 +1,4 @@
-from app.server import app
+from app.server import App
 
 if __name__ == '__main__':
-    app.run()
+    App.run_server()
