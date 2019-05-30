@@ -10,6 +10,7 @@ from app.models.Post import PostModel, posts_schema, post_schema
 
 user_parser = reqparse.RequestParser()
 user_parser.add_argument('corpo', type=str, help='Campo não pode ser vazio')
+user_parser.add_argument('titulo', type=str, help='Campo não pode ser vazio')
 user_parser.add_argument('tb_user_id', type=str, help='Campo não pode ser vazio')
 
 class PostsResource(Resource):
@@ -21,7 +22,7 @@ class PostsResource(Resource):
   @jwt_required
   def post(self):
     args = user_parser.parse_args()
-    new_post = PostModel(corpo=args['corpo'], tb_user_id=args['tb_user_id'], created_at=dt.now())
+    new_post = PostModel(corpo=args['corpo'], titulo=args['titulo'], tb_user_id=args['tb_user_id'], created_at=dt.now())
 
     db.session.add(new_post)
     db.session.commit()
