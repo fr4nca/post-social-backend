@@ -31,6 +31,18 @@ class PostsResource(Resource):
     return new_post
     
 class PostResource(Resource):
+  @jwt_required
+  def delete(self, _id):
+    res = PostModel.find_by_id(_id)
+    if res:
+      post = post_schema.dump(res)
+      db.session.delete(res)
+      db.session.commit()
+      return post
+    else:
+      return { 'message': 'Nenhum post com este id' }, 400  
+
+
   def get(self, _id):
     res = PostModel.find_by_id(_id)
 
@@ -38,9 +50,10 @@ class PostResource(Resource):
       post = post_schema.dump(res)
       return post
     else:
-      return make_response(jsonify({ 'message': 'Nenhum post com este id' }), 400)
+      return { 'message': 'Nenhum post com este id' }, 400
 
 class PostsUserResource(Resource):
+  @jwt_required
   def get(self, _id):
     user = UserModel.find_by_id(_id)
     if user:
@@ -48,4 +61,4 @@ class PostsUserResource(Resource):
       posts = posts_schema.dump(res)
       return posts
     else:
-      return make_response(jsonify({ 'message': 'Nenhum usuário com este id' }), 400)
+      return { 'message': 'Nenhum usuário com este id' }, 400

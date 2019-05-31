@@ -40,13 +40,3 @@ class UserAuthResource(Resource):
       return { 'token': access_token }, 200
     else:
       return { 'message': 'Credenciais invalidas'}, 400
-
-class UsersResource(Resource):
-  @jwt_required
-  def get(self, _id):
-    user = UserModel.find_by_id(_id)
-    user = user_schema.dump(user)
-    if user:
-      return user
-    else:
-      return { 'message': 'Usuário não existe com este id' }, 400

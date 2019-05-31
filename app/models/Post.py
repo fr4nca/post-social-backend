@@ -25,7 +25,7 @@ class PostModel(db.Model):
 
 class PostSchema(ma.Schema):
   class Meta:
-    fields=('id', 'corpo', 'titulo', 'tb_user_id', 'created_at', 'user')
+    fields=('id', 'corpo', 'titulo', 'created_at', 'user')
   user = ma.Nested(UserSchema)
 
 post_schema = PostSchema()
