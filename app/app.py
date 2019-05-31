@@ -7,7 +7,7 @@ from app import db, ma
 from app.resources.user import UserResource, UserAuthResource
 from app.resources.post import PostsResource, PostResource, PostsUserResource
 
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__)
 app.config.from_pyfile('config.py')
 api = Api(app)
 CORS(app)
