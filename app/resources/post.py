@@ -15,7 +15,7 @@ user_parser.add_argument('tb_user_id', type=str, help='Campo não pode ser vazio
 
 class PostsResource(Resource):
   def get(self):
-    res = PostModel.query.all()
+    res = PostModel.query.order_by(PostModel.created_at.desc()).all()
     posts = posts_schema.dump(res)
     return posts
 

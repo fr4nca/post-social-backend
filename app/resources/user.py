@@ -31,16 +31,15 @@ class UserResource(Resource):
       return { 'message': 'Já existe um usuário com este email' }, 400
 
 class UserAuthResource(Resource):
-  @classmethod
   def post(cls):
     args = user_parser.parse_args()
     user = UserModel.find_by_email(args['email'])
 
     if user and user.check_password(args['password']):
-      access_token = create_access_token(identity={ 'email': args['email'], 'id': user.id })
+      access_token = create_access_token(identity={ 'name': user.name, 'email': args['email'], 'id': user.id })
       return { 'token': access_token }, 200
     else:
-      return { 'message': 'Credenciais invalidas'}, 401
+      return { 'message': 'Credenciais invalidas'}, 400
 
 class UsersResource(Resource):
   @jwt_required
