@@ -1,0 +1,8 @@
+uwsgi
+flask-jwt-extended
+flask-restful
+flask-sqlalchemy
+flask-marshmallow
+marshmallow-sqlalchemy
+pymysql
+flask-cors

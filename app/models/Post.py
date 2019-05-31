@@ -1,4 +1,4 @@
-from app.server import db, ma
+from app.app import db, ma
 from app.models.User import UserSchema
 
 class PostModel(db.Model):
