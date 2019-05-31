@@ -13,6 +13,7 @@ flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 pymysql = "*"
 flask-cors = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.7"
