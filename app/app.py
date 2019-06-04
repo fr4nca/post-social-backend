@@ -13,8 +13,10 @@ api = Api(app)
 CORS(app)
 jwt = JWTManager(app)
 
-db.init_app(app)
-ma.init_app(app)
+
+with app.app_context():
+  db.init_app(app)
+  ma.init_app(app)
 
 api.add_resource(UserResource, '/user')
 api.add_resource(UserAuthResource, '/login')
